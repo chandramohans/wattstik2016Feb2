@@ -93,7 +93,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
 		
 	router.post("/postDeviceData",function(req,res){
         var query = "INSERT INTO ??(??,??,??,??,??,??) VALUES (?,?,?,?,?,?)";
-        var table = ["devicemeasures","id", "createtimestamp", "voltage","current", "power", "energy",
+        var table = ["devicemeasures","deviceid", "createtimestamp", "voltage","current", "power", "energy",
 				req.body.deviceid, req.body.createtimestamp, req.body.voltage,
 					 req.body.current, req.body.power, req.body.energy];
 		console.log(req.body.deviceid);
@@ -110,7 +110,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
 	
 	router.get("/deviceData/:device_id",function(req,res){
         var query = "SELECT * FROM ?? WHERE ??=?";
-        var table = ["devicemeasures","id",req.params.device_id];
+        var table = ["devicemeasures","deviceid",req.params.device_id];
         query = mysql.format(query,table);
         connection.query(query,function(err,rows){
             if(err) {
