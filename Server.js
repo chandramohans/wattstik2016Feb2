@@ -14,11 +14,15 @@ REST.prototype.connectMysql = function() {
     var self = this;
     var pool      =    mysql.createPool({
         connectionLimit : 100,
+		waitForConnections : true,
+        queueLimit :0,
         host     : 'us-cdbr-iron-east-03.cleardb.net',
         user     : 'b66276f8f3ed9f',
         password : 'e3d4f6b4',
         database : 'heroku_2f2b3584c2e81bb',
-        debug    :  false
+        debug    :  true,
+		wait_timeout : 28800,
+        connect_timeout :10
     });
     pool.getConnection(function(err,connection){
         if(err) {
