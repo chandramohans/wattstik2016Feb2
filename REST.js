@@ -8,7 +8,8 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
     router.get("/",function(req,res){
         res.json({"Message" : "Hello World !"});
     });
-    router.post("/addUser",function(req,res){
+    
+	router.post("/addUser",function(req,res){
         var query = "INSERT INTO ??(??,??) VALUES (?,?)";
         var table = ["user","email","password",req.body.email,md5(req.body.password)];
 		console.log(req.body.email,md5(req.body.password));
@@ -74,6 +75,52 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
             }
         });
     });
+	
+	router.post("/addDevice",function(req,res){
+        var query = "INSERT INTO ??(??) VALUES (?)";
+        var table = ["device","name",req.body.devicename];
+		console.log(req.body.devicename);
+        query = mysql.format(query,table);
+        connection.query(query,function(err,rows){
+            if(err) {
+                res.json({"Error" : true, "Message" : "Error executing MySQL query"});
+				console.log(err.code);
+            } else {
+                res.json({"Error" : false, "Message" : "User Added !"});
+            }
+        });
+    });
+		
+	router.post("/postDeviceData",function(req,res){
+        var query = "INSERT INTO ??(??,??,??,??,??,??) VALUES (?,?,?,?,?,?)";
+        var table = ["devicemeasures","id", "createtimestamp", "voltage","current", "power", "energy",
+				req.body.deviceid, req.body.createtimestamp, req.body.voltage,
+					 req.body.current, req.body.power, req.body.energy];
+		console.log(req.body.deviceid);
+        query = mysql.format(query,table);
+        connection.query(query,function(err,rows){
+            if(err) {
+                res.json({"Error" : true, "Message" : "Error executing MySQL query"});
+				console.log(err.code);
+            } else {
+                res.json({"Error" : false, "Message" : "User Added !"});
+            }
+        });
+    });
+	
+	router.get("/deviceData/:device_id",function(req,res){
+        var query = "SELECT * FROM ?? WHERE ??=?";
+        var table = ["devicemeasures","id",req.params.device_id];
+        query = mysql.format(query,table);
+        connection.query(query,function(err,rows){
+            if(err) {
+                res.json({"Error" : true, "Message" : "Error executing MySQL query"});
+            } else {
+                res.json({"Error" : false, "Message" : "Success", "Users" : rows});
+            }
+        });
+    });
+	
 }
 
 module.exports = REST_ROUTER;
