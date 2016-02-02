@@ -78,7 +78,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
 	
 	router.post("/addDevice",function(req,res){
         var query = "INSERT INTO ??(??) VALUES (?)";
-        var table = ["device","name",req.body.devicename];
+        var table = ["device","devicename",req.body.devicename];
 		console.log(req.body.devicename);
         query = mysql.format(query,table);
         connection.query(query,function(err,rows){
