@@ -20,6 +20,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
 				console.log(err.code);
             } else {
                 res.json({"Error" : false, "Message" : "User Added !"});
+				connection.release();
             }
         });
     });
@@ -33,6 +34,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
                 res.json({"Error" : true, "Message" : "Error executing MySQL query"});
             } else {
                 res.json({"Error" : false, "Message" : "Success", "Users" : rows});
+				connection.release();
             }
         });
     });
@@ -46,6 +48,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
                 res.json({"Error" : true, "Message" : "Error executing MySQL query"});
             } else {
                 res.json({"Error" : false, "Message" : "Success", "Users" : rows});
+				connection.release();
             }
         });
     });
