@@ -121,7 +121,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
             } else {
                 res.json({"Error" : false, "Message" : "Device Data Added !"});
             }
-        });
+        }); 
     });
 	
 	router.get("/deviceData/:device_id",function(req,res){
