@@ -30,6 +30,7 @@ REST.prototype.connectMysql = function() {
         } else {
           self.configureExpress(connection);
 		  console.log('connected to db');
+		  connection.release();
         }
     });
 }

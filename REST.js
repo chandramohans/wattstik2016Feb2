@@ -14,29 +14,36 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
         var table = ["user","email","password",req.body.email,md5(req.body.password)];
 		console.log(req.body.email,md5(req.body.password));
         query = mysql.format(query,table);
-        connection.query(query,function(err,rows){
-            if(err) {
-                res.json({"Error" : true, "Message" : "Error executing MySQL query"});
-				console.log(err.code);
-            } else {
-                res.json({"Error" : false, "Message" : "User Added !"});
-				connection.release();
-            }
-        });
+		
+		pool.getConnection(function(err, connection) {
+			// Use the connection
+			connection.query(query,function(err,rows){
+				if(err) {
+					res.json({"Error" : true, "Message" : "Error executing MySQL query"});
+					console.log(err.code);
+				} else {
+					res.json({"Error" : false, "Message" : "User Added !"});
+					connection.release();
+				}
+			});
+		});
+		
     });
 	
 	 router.get("/users",function(req,res){
         var query = "SELECT * FROM ??";
         var table = ["user"];
         query = mysql.format(query,table);
-        connection.query(query,function(err,rows){
-            if(err) {
-                res.json({"Error" : true, "Message" : "Error executing MySQL query"});
-            } else {
-                res.json({"Error" : false, "Message" : "Success", "Users" : rows});
-				connection.release();
-            }
-        });
+		pool.getConnection(function(err, connection) {
+			connection.query(query,function(err,rows){
+				if(err) {
+					res.json({"Error" : true, "Message" : "Error executing MySQL query"});
+				} else {
+					res.json({"Error" : false, "Message" : "Success", "Users" : rows});
+					connection.release();
+				}
+			});
+		});
     });
 
     router.get("/users/:user_id",function(req,res){
