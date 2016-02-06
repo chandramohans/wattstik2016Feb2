@@ -23,24 +23,26 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
 					console.log(err.code);
 				} else {
 					res.json({"Error" : false, "Message" : "User Added !"});
-					connection.release();
+					//connection.release();
 				}
 			});
 		});
-		
     });
 	
 	 router.get("/users",function(req,res){
         var query = "SELECT * FROM ??";
         var table = ["user"];
         query = mysql.format(query,table);
+        
 		pool.getConnection(function(err, connection) {
+			// Use the connection
 			connection.query(query,function(err,rows){
 				if(err) {
 					res.json({"Error" : true, "Message" : "Error executing MySQL query"});
+					console.log(err.code);
 				} else {
 					res.json({"Error" : false, "Message" : "Success", "Users" : rows});
-					connection.release();
+					//connection.release();
 				}
 			});
 		});
