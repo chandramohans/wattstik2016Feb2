@@ -151,9 +151,9 @@ REST_ROUTER.prototype.handleRoutes= function(router,pool,md5) {
 		});
     });
 	
-	router.get("/deviceData/:device_id",function(req,res){
-        var query = "SELECT * FROM ?? WHERE ??=?";
-        var table = ["devicemeasures","deviceid",req.params.device_id];
+	router.get("/deviceData/:device_id,:fromDt,:toDt",function(req,res){
+        var query = "SELECT * FROM ?? WHERE ??=? AND current < ? And current > ?";
+        var table = ["devicemeasures","deviceid",req.params.device_id,req.params.fromDt ,req.params.toDt];
         query = mysql.format(query,table);
 		pool.getConnection(function(err, connection) {
 			// Use the connection
