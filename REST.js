@@ -151,7 +151,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,pool,md5) {
 		});
     });
 	
-	router.get("/deviceData/:device_id",function(req,res){
+	router.post("/deviceData/:device_id",function(req,res){
         var query = "SELECT * FROM ?? WHERE ??=? AND (CREATETIMESTAMP BETWEEN ? AND ?)";
         var table = ["devicemeasures","deviceid",req.params.device_id,req.params.fromDt ,req.params.toDt];
         query = mysql.format(query,table);
