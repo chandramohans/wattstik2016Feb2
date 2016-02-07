@@ -153,7 +153,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,pool,md5) {
 	
     router.get("/deviceData/:deviceid",function(req,res){
         var query = "SELECT * FROM ?? WHERE ??=?";
-        var table = ["devicemeasure","deviceid",req.params.deviceid];
+        var table = ["devicemeasures","deviceid",req.params.deviceid];
         query = mysql.format(query,table);
 		pool.getConnection(function(err, connection) {
 			// Use the connection
