@@ -151,12 +151,9 @@ REST_ROUTER.prototype.handleRoutes= function(router,pool,md5) {
 		});
     });
 	
-	//router.get("/deviceData/:device_id,:fromDt, :toDt",function(req,res){
-	router.get("/deviceData/:device_id",function(req,res){
-        //var query = "SELECT * FROM ?? WHERE ??=? AND (CREATETIMESTAMP BETWEEN ? AND ?)";
-		var query = "SELECT * FROM ?? WHERE ??=?";
-        //var table = ["devicemeasures","deviceid",req.params.device_id,req.params.fromDt ,req.params.toDt];
-		var table = ["devicemeasures","deviceid",req.params.device_id];
+    router.get("/deviceData/:deviceid",function(req,res){
+        var query = "SELECT * FROM ?? WHERE ??=?";
+        var table = ["devicemeasure","deviceid",req.params.deviceid];
         query = mysql.format(query,table);
 		pool.getConnection(function(err, connection) {
 			// Use the connection
@@ -164,12 +161,13 @@ REST_ROUTER.prototype.handleRoutes= function(router,pool,md5) {
 				if(err) {
 					res.json({"Error" : true, "Message" : "Error executing MySQL query"});
 				} else {
-					res.json({"Error" : false, "Message" : "Success", "device measures" : rows});
+					res.json({"Error" : false, "Message" : "Success", "deviceData" : rows});
+					connection.release();
 				}
 			});
 		});
-    });
-	
+	});
+
 }
 
 module.exports = REST_ROUTER;
