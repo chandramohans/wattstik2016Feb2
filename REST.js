@@ -132,9 +132,9 @@ REST_ROUTER.prototype.handleRoutes= function(router,pool,md5) {
     });	
 		
 	router.post("/postDeviceData",function(req,res){
-        var query = "INSERT INTO ??(??,??,??,??,??,??) VALUES (?,?,?,?,?,?)";
-        var table = ["devicemeasures","deviceid", "createtimestamp", "voltage","current", "power", "energy",
-				req.body.deviceid, req.body.createtimestamp, req.body.voltage,
+        var query = "INSERT INTO ??(??,??,??,??,??,??,??) VALUES (?,?,?,?,?,?,?)";
+        var table = ["devicemeasures","deviceid", "gatewaydeviceid", "createtimestamp", "voltage","current", "power", "energy",
+				req.body.deviceid, req.body.gatewaydeviceid, req.body.createtimestamp, req.body.voltage,
 					 req.body.current, req.body.power, req.body.energy];
 		console.log(req.body.deviceid);
         query = mysql.format(query,table);
