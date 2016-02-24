@@ -23,7 +23,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,pool,md5) {
 					console.log(err.code);
 				} else {
 					res.json({"Error" : false, "Message" : "User Added !"});
-					//connection.release();
+					connection.release();
 				}
 			});
 		});
@@ -42,7 +42,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,pool,md5) {
 					console.log(err.code);
 				} else {
 					res.json({"Error" : false, "Message" : "Success", "Users" : rows});
-					//connection.release();
+					connection.release();
 				}
 			});
 		});
@@ -76,6 +76,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,pool,md5) {
 					res.json({"Error" : true, "Message" : "Error executing MySQL query"});
 				} else {
 					res.json({"Error" : false, "Message" : "Updated the password for email "+req.body.email});
+					connection.release();
 				}
 			});
 		});
@@ -92,6 +93,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,pool,md5) {
 					res.json({"Error" : true, "Message" : "Error executing MySQL query"});
 				} else {
 					res.json({"Error" : false, "Message" : "Deleted the user with email "+req.params.email});
+					connection.release();
 				}
 			});
 		});
@@ -110,6 +112,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,pool,md5) {
 					console.log(err.code);
 				} else {
 					res.json({"Error" : false, "Message" : "Device Added !"});
+					connection.release();
 				}
 			});
 		});
@@ -126,6 +129,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,pool,md5) {
 					res.json({"Error" : true, "Message" : "Error executing MySQL query"});
 				} else {
 					res.json({"Error" : false, "Message" : "Success", "devices" : rows});
+					connection.release();
 				}
 			});
 		});
@@ -146,6 +150,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,pool,md5) {
 					console.log(err.code);
 				} else {
 					res.json({"Error" : false, "Message" : "Device Data Added !"});
+					connection.release();
 				}
 			}); 
 		});
