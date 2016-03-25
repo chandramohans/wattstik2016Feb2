@@ -7,25 +7,30 @@ var rest = require("./REST.js");
 
 var app  = express();
 
-function REST(){
+var mqtt = require('mqtt');
+var client = mqtt.connect('mqtt://eyvxyvsf:XD89pD6CLAa8@m10.cloudmqtt.com:19556');
+
+var pool      =    mysql.createPool({
+	connectionLimit : 100,
+	waitForConnections : true,
+	queueLimit :0,
+	host     : 'us-cdbr-iron-east-03.cleardb.net',
+	user     : 'b66276f8f3ed9f',
+	password : 'e3d4f6b4',
+	database : 'heroku_2f2b3584c2e81bb',
+	debug    :  true,
+	wait_timeout : 28800,
+	connect_timeout :10
+});
+
+function REST(pool){
     var self = this;
-    self.connectMysql();
+    self.connectMysql(pool);
 };
 
-REST.prototype.connectMysql = function() {
+REST.prototype.connectMysql = function(pool) {
     var self = this;
-    var pool      =    mysql.createPool({
-        connectionLimit : 100,
-		waitForConnections : true,
-        queueLimit :0,
-        host     : 'us-cdbr-iron-east-03.cleardb.net',
-        user     : 'b66276f8f3ed9f',
-        password : 'e3d4f6b4',
-        database : 'heroku_2f2b3584c2e81bb',
-        debug    :  true,
-		wait_timeout : 28800,
-        connect_timeout :10
-    });
+ 
     pool.getConnection(function(err,connection){
         if(err) {
           self.stop(err);
@@ -59,4 +64,43 @@ REST.prototype.stop = function(err) {
     process.exit(1);
 }
 
-new REST();
+new REST(pool);
+
+client.subscribe('devices/data', function() {
+	client.on('message', function(topic, message, packet) {
+	console.log("received '" + message + "' on '" + topic + "'");
+	// do something with message, for eg.: emit via WebSocket to the connected clients
+	var json = JSON.parse(packet.payload);
+	storeDeviceData(json);
+	});
+});
+
+function storeDeviceData(json){
+/*	for (var k in json) {
+			var v = json[k];
+			console.log('Key: %s, Value: %s', k, v);
+		}
+*/
+//	Object.keys(json)[0]) //deviceid, gatewaydeviceid,createtimestamp, voltage, current, power, energy;
+	console.log(json.deviceid);
+	
+	var query = "INSERT INTO ??(??,??,??,??,??,??,??) VALUES (?,?,str_to_date(?,\'%d:%m:%Y %H:%i:%s\' ),?,?,?,?)";
+    var table = ["devicemeasures","deviceid", "gatewaydeviceid", "createtimestamp", "voltage","current", "power", "energy",
+				json.deviceid, json.gatewaydeviceid, json.createtimestamp, json.voltage,
+					 json.current, json.power, json.energy];
+		
+    query = mysql.format(query,table);
+	pool.getConnection(function(err, connection) {
+	// Use the connection
+		connection.query(query,function(err,rows){
+			if(err) {
+				//res.json({"Error" : true, "Message" : "Error executing MySQL query"});
+				console.log(err.code);
+			} else {
+				//res.json({"Error" : false, "Message" : "Device Data Added !"});
+				console.log("success");
+				connection.release();
+			}
+		}); 
+	});
+}
