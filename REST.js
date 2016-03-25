@@ -117,7 +117,27 @@ REST_ROUTER.prototype.handleRoutes= function(router,pool,md5) {
 			});
 		});
 	});
-		
+
+	router.post("/attDeviceToUser",function(req,res){
+		var query = "INSERT INTO ??(??,??) VALUES (?,?)";
+        var table = ["userdevice","userID","deviceID",req.body.userID,req.body.deviceID];
+		console.log(req.body.devicename);
+        query = mysql.format(query,table);
+		pool.getConnection(function(err, connection) {
+			// Use the connection
+			connection.query(query,function(err,rows){
+				if(err) {
+					res.json({"Error" : true, "Message" : "Error executing MySQL query"});
+					console.log(err.code);
+				} else {
+					res.json({"Error" : false, "Message" : "Device Added !"});
+					connection.release();
+				}
+			});
+		});
+	});
+
+	
 	router.get("/devices/:device_id",function(req,res){
         var query = "SELECT * FROM ?? WHERE ??=?";
         var table = ["device","id",req.params.device_id];
